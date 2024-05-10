@@ -2,9 +2,11 @@ const express = require("express")
 const cors = require("cors");
 const connectDatabase = require("./config/dbConnect");
 const app = express()
-const multer = require("multer");
+const multer = require('multer')
+const storage = multer.memoryStorage()  // store image in memory
+const upload = multer({storage:storage})
 const DataModel = require("./models/Data-model");
-const upload = multer({dest:"upload/"})
+
 const PORT = process.env.PORT || 7777
 const cloudinary = require("cloudinary").v2
 
