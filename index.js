@@ -2,25 +2,17 @@ const express = require("express")
 const cors = require("cors");
 const connectDatabase = require("./config/dbConnect");
 const app = express()
-const multer = require('multer')
+
 const DataModel = require("./models/Data-model");
 const imageUpload = require("./middleware/upload ");
 
 const PORT = process.env.PORT || 7777
 const cloudinary = require("cloudinary").v2
 
-const storage = multer.memoryStorage()  // store image in memory
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB in bytes
-  });
 
 
-cloudinary.config({
-    cloud_name: 'desvgqarv',
-    api_key: '145346287342629',
-    api_secret: 'QKV7NMERDvVo5V9IOr1A0sR51yg',
-  });
+
+
 
 
 
