@@ -3,12 +3,18 @@ const cors = require("cors");
 const connectDatabase = require("./config/dbConnect");
 const app = express()
 const multer = require('multer')
-const storage = multer.memoryStorage()  // store image in memory
-const upload = multer({storage:storage})
 const DataModel = require("./models/Data-model");
+const imageUpload = require("./middleware/upload ");
 
 const PORT = process.env.PORT || 7777
 const cloudinary = require("cloudinary").v2
+
+const storage = multer.memoryStorage()  // store image in memory
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB in bytes
+  });
+
 
 cloudinary.config({
     cloud_name: 'desvgqarv',
@@ -45,30 +51,27 @@ app.get("/get-all-data",async(req,res)=>{
     }
 })
 
-app.post("/upload-data",upload.single("file"),async(req,res)=>{
+app.post("/upload-data", imageUpload , async (req, res) => {
     try {
-        const fileone = req.files[0];
-        const { username} = req.body
+    console.log(req.body.image)
 
-        const upload_image = await cloudinary.uploader.upload(fileone,{
-            folder:"skssf"
-        })
+    const image = req.body.image
+    const upload = await DataModel.create({
+        image_url: image,
+        username:req.body.name
+    })
+    console.log(upload)
 
-        const insert_Database = await DataModel.create({
-            username,
-            image_url : upload_image.secure_url
-        })
-
-        res.status(200).json({
-            message:"SuccessFully Uploaded"
-        })
+    res.status(200).json({
+        message:"SuccessFully uploaded"
+    })
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(400).json({
-            message:"Upload issue is there"
-        })
+            message: "Upload issue is there"
+        });
     }
-})
+});
 
 
 
