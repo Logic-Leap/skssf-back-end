@@ -11,7 +11,7 @@ const cloudinary = require("cloudinary").v2
 
 
 
-  
+
 
 
 
@@ -32,10 +32,9 @@ app.use(express.json());
 
 app.get("/get-all-data",async(req,res)=>{
     try {
-        
-        res.status(200).json({
-            message:"hello worlds "
-        })
+        const get_Data = await DataModel.find()
+        console.log(get_Data)
+        res.status(200).json(get_Data)
     } catch (error) {
         console.log(error)
         res.status(400).json({
